@@ -73,10 +73,9 @@ const getAccountData = async (
         data.txs = Big(resource.data.sequence_number).toNumber();
         break;
       }
-      // case "0x3::token::TokenStore": {
-      //   data.isAptosName = true;
-      //   break;
-      // }
+      case "0x3::token::TokenStore": {
+        break;
+      }
       default: {
         const tokenData = formatToken(resource, tokenPrices);
         if (tokenData) {
