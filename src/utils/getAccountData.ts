@@ -10,6 +10,7 @@ export type AccountData = {
   // isAptosName: boolean;
   totalUsd: number;
   txs: number;
+  aptCount: number;
 } & Partial<Record<TokenId, number>>;
 
 type TokenPrices = Record<string, number>;
@@ -34,12 +35,10 @@ const formatToken = (
   }
 
   const decimalDivider = Big(10).pow(decimals);
-  const usdBalance = Big(tokenResource.data.coin.value)
-    .div(decimalDivider)
-    .round(2)
-    .toNumber();
+  const count = Big(tokenResource.data.coin.value).div(decimalDivider);
+  const usdBalance = count.round(2).toNumber();
 
-  return { id, usdBalance };
+  return { id, usdBalance, count: count.toNumber() };
 };
 
 const formatAddress = (address: string) => {
@@ -65,6 +64,7 @@ const getAccountData = async (
     totalUsd: 0,
     // isAptosName: false,
     txs: 0,
+    aptCount: 0,
   };
 
   for (const resource of resources) {
@@ -79,10 +79,14 @@ const getAccountData = async (
       default: {
         const tokenData = formatToken(resource, tokenPrices);
         if (tokenData) {
-          const { id, usdBalance } = tokenData;
+          const { id, usdBalance, count } = tokenData;
 
           if (Big(usdBalance).gte(hideTokensLessThanUsd)) {
             data[id] = usdBalance;
+          }
+
+          if (id === "apt") {
+            data.aptCount = count;
           }
         }
         break;
