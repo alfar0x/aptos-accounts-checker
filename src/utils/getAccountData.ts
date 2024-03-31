@@ -7,7 +7,7 @@ import { addressFormat, hideTokensLessThanUsd } from "../config";
 
 export type AccountData = {
   address: string;
-  isAptosName: boolean;
+  // isAptosName: boolean;
   totalUsd: number;
   txs: number;
 } & Partial<Record<TokenId, number>>;
@@ -63,7 +63,7 @@ const getAccountData = async (
   const data: AccountData = {
     address: formatAddress(address),
     totalUsd: 0,
-    isAptosName: false,
+    // isAptosName: false,
     txs: 0,
   };
 
@@ -73,10 +73,10 @@ const getAccountData = async (
         data.txs = Big(resource.data.sequence_number).toNumber();
         break;
       }
-      case "0x3::token::TokenStore": {
-        data.isAptosName = true;
-        break;
-      }
+      // case "0x3::token::TokenStore": {
+      //   data.isAptosName = true;
+      //   break;
+      // }
       default: {
         const tokenData = formatToken(resource, tokenPrices);
         if (tokenData) {
